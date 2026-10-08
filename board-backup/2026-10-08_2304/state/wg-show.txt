@@ -1,0 +1,7 @@
+interface: wg0
+  public key: o1WiBPxmOvp683BsCFTE9wTqT24QIDSvlmBf312dUi8=
+  private key: (hidden)
+  listening port: 51150
+
+peer: DjxXkdhK33x30m1VZHOj5b1JNaYfE0H8MbDpgUqJS3E=
+  allowed ips: 10.8.0.100/32

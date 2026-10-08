@@ -1,0 +1,112 @@
+### date
+Thu Oct  8 20:04:39 UTC 2026
+
+### uname
+Linux luckfox 5.10.160 #1 Mon Jun 15 00:54:53 EEST 2026 armv7l GNU/Linux
+
+### os-release
+NAME=Buildroot
+VERSION=-g824b817f8-dirty
+ID=buildroot
+VERSION_ID=2023.02.6
+PRETTY_NAME="Buildroot 2023.02.6"
+
+### cmdline
+user_debug=31 storagemedia=emmc androidboot.storagemedia=emmc androidboot.mode=normal  rootwait earlycon=uart8250,mmio32,0xff4c0000 console=ttyFIQ0 root=/dev/mmcblk0p7 snd_soc_core.prealloc_buffer_size_kbytes=16 coherent_pool=0 blkdevparts=mmcblk0:32K(env),512K@32K(idblock),256K(uboot),32M(boot),512M(oem),256M(userdata),6G(rootfs) rootfstype=ext4 rk_dma_heap_cma=100M androidboot.fwver=uboot-06/15/2026
+
+### mounts
+/dev/root / ext4 rw,relatime 0 0
+devtmpfs /dev devtmpfs rw,relatime,size=74592k,nr_inodes=18648,mode=755 0 0
+proc /proc proc rw,relatime 0 0
+devpts /dev/pts devpts rw,relatime,gid=5,mode=620,ptmxmode=666 0 0
+tmpfs /dev/shm tmpfs rw,relatime,mode=777 0 0
+tmpfs /tmp tmpfs rw,relatime 0 0
+tmpfs /run tmpfs rw,nosuid,nodev,relatime,mode=755 0 0
+sysfs /sys sysfs rw,relatime 0 0
+/dev/block/by-name/userdata /userdata ext4 rw,relatime 0 0
+/dev/block/by-name/oem /oem ext4 rw,relatime 0 0
+none /sys/kernel/config configfs rw,relatime 0 0
+adb /dev/usb-ffs/adb functionfs rw,relatime 0 0
+
+### df
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/root              6114912    224480   5680360   4% /
+devtmpfs                 74592         0     74592   0% /dev
+tmpfs                    74704         0     74704   0% /dev/shm
+tmpfs                    74704       224     74480   0% /tmp
+tmpfs                    74704       604     74100   1% /run
+/dev/block/by-name/userdata
+                        243631       431    233703   0% /userdata
+/dev/block/by-name/oem
+                        499284     19948    463028   4% /oem
+
+### lsmod
+Module                  Size  Used by    Tainted: G  
+aic8800_btlpm           1719  0 
+aic8800_fdrv          285463  0 
+aic8800_bsp            53767  2 aic8800_btlpm,aic8800_fdrv
+aes_generic            24532  0 
+ccm                     6847  0 
+ctr                     2606  0 
+libarc4                  799  0 
+cfg80211              168973  1 aic8800_fdrv
+rve                    23436  0 
+rockit                225880  0 
+rknpu                  27019  0 
+mpp_vcodec            414257  1 rockit
+rga3                   90762  1 rockit
+phy_rockchip_csi2_dphy     9338  0 
+phy_rockchip_csi2_dphy_hw    10066  0 
+video_rkisp           171902  1 rockit
+video_rkcif           162117  1 rockit
+rk_dvbm                 5941  2 mpp_vcodec,video_rkisp
+
+### versions
+wireguard-tools v1.0.20210914 - https://git.zx2c4.com/wireguard-tools/
+Python 3.11.6
+OpenSSH_9.3p2, OpenSSL 1.1.1v  1 Aug 2023
+iptables v1.8.9 (legacy)
+BusyBox v1.36.1 (2026-06-15 01:44:35 EEST) multi-call binary.
+
+### luckfox.cfg
+SPI0_M0_CS_ENABLE=1
+SPI0_M0_MODE=1
+USB_MODE=host
+
+### init.d
+99-ipforward.conf
+S01seedrng
+S01syslogd
+S02klogd
+S02sysctl
+S10udev
+S20linkmount
+S20urandom
+S21appinit
+S30dbus
+S35iptables
+S40bluetoothd
+S40network
+S41dhcpcd
+S41wifinopm
+S49ntp
+S50sshd
+S50telnet
+S50usbdevice
+S60micinit
+S91smb
+S99_auto_reboot
+S99hciinit
+S99luckfoxconfigload
+S99luckfoxcustomoverlay
+S99python
+S99rtcinit
+S99usb0config
+S99wireguard
+rcK
+rcS
+
+### ssh host key pub md5
+174d3cb4ca26bcc9630cc8202fb059aa  /etc/ssh/ssh_host_ecdsa_key.pub
+f853b1264f4f29dc3451edf94598f818  /etc/ssh/ssh_host_ed25519_key.pub
+5bc3d1cfeb827deb542fae9b0d688547  /etc/ssh/ssh_host_rsa_key.pub

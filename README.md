@@ -13,7 +13,7 @@ known-good state.
 | Persistent data | `/userdata` (mmcblk0p6 ext4) — logs (`/var/log` symlink lives here), `wpa_supplicant.conf` |
 | OEM | `/oem` (mmcblk0p5) — vendor binaries/libs + root dotfiles (`.ssh`, `.config`) |
 | Boot partition | `/dev/mmcblk0p4` — uImage **+ patched DTB**. `luckfox-config` writes pin/USB settings here (e.g. `USB_MODE=host`). NOT visible anywhere else — this is why `backup.sh` dumps it. |
-| Network | WiFi `SLEngineers` → `192.168.1.150` (dhcp), WireGuard `wg0` → `10.8.0.10`, NAT + hairpin guardrails |
+| Network | WiFi `SLEngineers` → `192.168.1.150` (dhcp), WireGuard `wg0` → `10.8.0.10`, NAT + **full-LAN routing** (rate-capped, see below) |
 | Key custom services | `S99wireguard`, `S41wifinopm` + `/usr/bin/wifi-pm-keeper`, `S99python`, `S99usb0config`, `S35iptables` |
 
 ## What's in `board-backup/<timestamp>/`
@@ -67,6 +67,29 @@ want to avoid full reflash.
 # one file from the latest backup:
 tar xzf board-backup/*/etc.tar.gz etc/init.d/S99wireguard -O | ssh big 'cat > /etc/init.d/S99wireguard && chmod +x /etc/init.d/S99wireguard'
 ```
+
+## WireGuard forwarding policy
+
+`/etc/init.d/S99wireguard` forwards tunnel clients to the **whole** `192.168.1.0/24`
+(not just the ESP32), behind one MASQUERADE rule. Live rules:
+
+```sh
+iptables -S FORWARD          # limit ACCEPT wg0->wlan0, state ACCEPT wlan0->wg0, DROP rest
+iptables -t nat -S POSTROUTING   # MASQUERADE -s 10.8.0.0/24 -o wlan0
+```
+
+The old ESP32-only allow-list is kept as `/etc/init.d/S99wireguard.bak.esponly`
+(`cp ... /etc/init.d/S99wireguard` + restart to roll back).
+
+The `wg0 -> wlan0` ACCEPT is gated by `--limit 1000/second --limit-burst 2000`, and the
+trailing `DROP` is what makes the limit real — `-P FORWARD` is `ACCEPT`, so without the
+DROP the limit rule would only ever pass packets. Tune without editing the file:
+`RATE_CAP=500/second /etc/init.d/S99wireguard restart`.
+
+**The rate cap is not full protection.** `xt_limit` is evaluated *after* WireGuard has
+already decrypted the packet, so a hairpin loop still burns CPU on decrypt — it just
+stops the LAN-side storm (router-GUI polling, ARP) from cascading. Keep the phone's
+AllowedIPs narrow when on home WiFi; see gotchas below.
 
 ## Notes / gotchas
 
